@@ -21,6 +21,7 @@ Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to
 # Pipeline Architecture:
    
 - Stages of the Pipeline:
+```
 1. Clone Code from Repository
 2. Build Docker Image
 3. Push Image to Docker Hub
@@ -31,7 +32,8 @@ Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to
     •	Scroll to "Extended E-mail Notification" and configure the SMTP server details (e.g., smtp.gmail.com, port 465).
     •	Set the default email suffix (e.g., @yourdomain.com).
     •	Add the following stage to the Jenkins pipeline to send
-   
+```
+
 # Adding Local hook To trigger the Jenkins pipeline automatically when a commit is made to a Git repository
     - Navigate to your local Git repository's .git/hooks directory.
     - Create a file named post-commit 
@@ -63,19 +65,22 @@ curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user your-jenkins-username:you
 # Connect to EC2 via SSH:
 
 Step 1: Generate a new SSH key pair (if you don’t have one)
+```
    - Open a terminal window on your local machine.
    - ssh-keygen -t rsa -b 2048 -f ~/.ssh/aws_ec2_key
   This command generates a new SSH key pair named aws_ec2_key with a 2048-bit RSA encryption algorithm. It will prompt you to optionally 
    - add a passphrase for additional security.
+```
 
 Step 2: Upload the public key to AWS
+```
    - Go to the AWS Management Console and navigate to the EC2 dashboard.
    - Click on “Key Pairs” under “Network & Security” in the left sidebar.
    - Click on the “Import Key Pair” button.
    - Provide a name for your key pair (e.g., aws_ec2_key) and paste the contents of the public key file (aws_ec2_key.pub) into the "Public Key Contents" field.
    - Click “Import” to upload the key pair.
    - Step 3: SSH into your EC2 instance using the private key
-
+```
 Change the permissions of the private key file to make it readable only by you:
    - chmod 400 ~/.ssh/aws_ec2_key
 
