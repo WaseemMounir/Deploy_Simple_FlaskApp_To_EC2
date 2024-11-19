@@ -52,7 +52,9 @@ curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user your-jenkins-username:you
 -------------------------------------
 
 #Ensure the hook script is executable by running:
+
       # chmod +x .git/hooks/post-commit
+      
           - to Add and Push changes.
           - git add .
           - git commit -m "Modified"
