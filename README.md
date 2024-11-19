@@ -42,10 +42,12 @@ Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to
 #!/bin/sh
 
 #Replace with your Jenkins URL and job name
+
 JENKINS_URL="http://localhost:8080"
 JOB_NAME="your-job-name"
 
 #Trigger Jenkins job using curl
+
 curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user your-jenkins-username:your-api-token
 -------------------------------------
 
