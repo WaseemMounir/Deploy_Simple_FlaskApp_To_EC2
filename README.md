@@ -3,7 +3,7 @@
 Objective:
 Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to deploy a simple Flask application on an EC2 instance. The pipeline will automate the processes of code integration, containerization, and deployment to a cloud environment.
 
-1. Technologies Used:
+# Technologies Used:
     •  Jenkins for continuous integration
     •  Docker for containerization
     •  Flask for creating the web application
@@ -11,14 +11,14 @@ Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to
     •  Git for source code management
     •  AWS EC2 for cloud hosting
 
-2- Add Github and Dockerhub credentials in Jenkins
+# Add Github and Dockerhub credentials in Jenkins
     Manage Jenkins > Manage Credentials > Global > Add Credentials
     - From Github create access token as below:
       settings > Developer settings > Personal access tokens > tokens (classic)
     - From Docker Hub create 
       Account settings > Personal access tokens > Create new token
 
-2. Pipeline Architecture:
+# Pipeline Architecture:
    
 - Stages of the Pipeline:
 1. Clone Code from Repository
@@ -32,12 +32,13 @@ Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to
     •	Set the default email suffix (e.g., @yourdomain.com).
     •	Add the following stage to the Jenkins pipeline to send
    
-4- Adding Local hook To trigger the Jenkins pipeline automatically when a commit is made to a Git repository
+# Adding Local hook To trigger the Jenkins pipeline automatically when a commit is made to a Git repository
     - Navigate to your local Git repository's .git/hooks directory.
     - Create a file named post-commit 
 
   Add Hook Script:
 
+-----------------------------------
 #!/bin/sh
 
 # Replace with your Jenkins URL and job name
@@ -46,15 +47,16 @@ JOB_NAME="your-job-name"
 
 # Trigger Jenkins job using curl
 curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user your-jenkins-username:your-api-token
+-------------------------------------
 
-Ensure the hook script is executable by running:
+# Ensure the hook script is executable by running:
       # chmod +x .git/hooks/post-commit
           - to Add and Push changes.
           - git add .
           - git commit -m "Modified"
           - git push origin main
 
-Connect to EC2 via SSH:
+# Connect to EC2 via SSH:
 
 Step 1: Generate a new SSH key pair (if you don’t have one)
    - Open a terminal window on your local machine.
@@ -74,6 +76,7 @@ Change the permissions of the private key file to make it readable only by you:
    - chmod 400 ~/.ssh/aws_ec2_key
 
 Use the ssh command to connect to your EC2 instance:
+
 ssh -i ~/.ssh/aws_ec2_key ec2-user@<YOUR_EC2_PUBLIC_IP>
 
    
