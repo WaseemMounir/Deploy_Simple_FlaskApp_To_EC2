@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+        environment {
+            DOCKER_CREDENTIALS_ID = 'Docker_Hub_Cred' 
+            DOCKER_IMAGE_NAME = 'simple-flask-app-img'
+            DOCKER_TAG = 'v1'
+            SSH_CREDENTIALS_ID = 'EC2-SHH-Cred' // Jenkins credentials for SSH into EC2
+        }
+    stages {
+        stage('Clone Code From Repo') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-cred', usernameVariable: 'github_username', passwordVariable: 'github_password')]) {
+                sh '''
+                rm -rf simple-flask-app || true
+                git clone https://$github_username:$github_password@github.com/WaseemMounir/simple-flask-app.git
+                '''
+                
+                }
+            }
+        }
+        stage('Build Image') {
+            steps {
+                script {
+                    // Building the Docker image
+                   dir('simple-flask-app') {
+                        sh "docker build -t wasee2mounir/${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
+                        //sh "docker run -d -p 5000:5000 wasee2mounir/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+                    }
+                }
+            }
+        }
+        stage('Login to Docker') {
+            steps {
+                script {
+                    // Ensure that this is the correct way to use the docker plugin
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        echo "Logged in to Docker Hub"
+                    }
+                }
+            }
+        }
+        stage('Push Image') {
+            steps {
+                script {
+                    docker.withRegistry('', DOCKER_CREDENTIALS_ID) {
+                        sh "docker push wasee2mounir/${DOCKER_IMAGE_NAME}:${DOCKER_TAG}"
+                    }
+                }
+            }
+        }
+        stage('Deploy to EC2 using Ansible') {
+            steps {
+                script {
+                    withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS_ID, keyFileVariable: 'SSH_KEY')]) {
+                        sh '''
+                        ls -al
+                        pwd
+                        chmod 600 simple-flask-app/jenkins-key.pem
+                        ansible-playbook -i simple-flask-app/hosts simple-flask-app/deploy_from_docker_hub.yml --ssh-extra-args="-o StrictHostKeyChecking=no"
+                        '''
+                    }
+                }
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                def buildStatus = currentBuild.currentResult ?: 'UNKNOWN' // Capture build status
+                emailext(
+                    subject: "Status - Project-Name: ${env.JOB_NAME} Build ${env.BUILD_NUMBER} - ${buildStatus}",
+                    body: """
+                    <p>Build Status: ${buildStatus}</p>
+                    <p>Job Name: ${env.JOB_NAME}</p>
+                    <p>Build Number: ${env.BUILD_NUMBER}</p>
+                    <p>Build URL: ${env.BUILD_URL}</p>
+                    """,
+                    recipientProviders: [[$class: 'CulpritsRecipientProvider'], [$class: 'RequesterRecipientProvider']],
+                    to: 'waseem2mounir@gmail.com',
+                    mimeType: 'text/html'
+                )
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+---
+  - name: Deploy Application from Docker Hub to EC2
+    hosts: EC2
+    become: yes
+    vars:
+      docker_image: "wasee2mounir/simple-flask-app-img:v1"  
+      container_name: "flask-app-conatiner"
+      app_port: 5000
+  
+    tasks:
+      - name: Ensure Docker is installed
+        apt:
+          name: docker.io
+          state: present
+          update_cache: yes
+  
+      - name: Start Docker service
+        service:
+          name: docker
+          state: started
+          enabled: yes
+  
+      - name: Pull the Docker image
+        docker_image:
+          name: "{{ docker_image }}"
+          source: pull
+  
+      - name: Run the Docker container
+        docker_container:
+          name: "{{ container_name }}"
+          image: "{{ docker_image }}"
+          state: started
+          ports:
+            - "{{ app_port }}:5000"
+          restart_policy: always

@@ -1,0 +1,2 @@
+[EC2]
+18.193.75.49 host_key_checking=False ansible_user=ubuntu ansible_ssh_private_key_file=simple-flask-app/jenkins-key.pem
