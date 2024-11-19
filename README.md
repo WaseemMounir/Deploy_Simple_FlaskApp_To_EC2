@@ -38,7 +38,7 @@ Implement a fully automated CI/CD pipeline using Jenkins, Docker, and Ansible to
 
   Add Hook Script:
 
------------------------------------
+```
 #!/bin/sh
 
 #Replace with your Jenkins URL and job name
@@ -49,12 +49,12 @@ JOB_NAME="your-job-name"
 #Trigger Jenkins job using curl
 
 curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user your-jenkins-username:your-api-token
--------------------------------------
+```
 
 #Ensure the hook script is executable by running:
 
       # chmod +x .git/hooks/post-commit
-      
+
           - to Add and Push changes.
           - git add .
           - git commit -m "Modified"
