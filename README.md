@@ -57,10 +57,12 @@ curl -X POST "$JENKINS_URL/job/$JOB_NAME/build" --user your-jenkins-username:you
 
       # chmod +x .git/hooks/post-commit
 
-          - to Add and Push changes.
-          - git add .
-          - git commit -m "Modified"
-          - git push origin main
+# to Add and Push changes.
+```
+  - git add .
+  - git commit -m "Modified"
+  - git push origin main
+```
 
 # Connect to EC2 via SSH:
 
